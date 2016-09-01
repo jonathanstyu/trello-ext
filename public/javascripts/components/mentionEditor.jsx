@@ -1,16 +1,30 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
 
-import {authorize, getItems} from '../actions/trelloAppActions';
+import {addComment} from '../actions/trelloAppActions';
 import {connect} from 'react-redux';
 
 var MentionEditor = React.createClass({
-  handleTouchTap: function() {
-    if (this.props.authorized) {
-      this.props.getItems()
-    } else {
-      this.props.authorize()
+  getInitialState() {
+    return {
+      textContent: ""
     }
+  },
+
+  keyDown(event) {
+    if (event.keyCode === 13) {
+      var cardToPost = this.props.mention.data.card.id;
+      this.props.submit(event, cardToPost);
+      this.setState({
+        textContent: ""
+      })
+    }
+  },
+
+  onChange(event) {
+    this.setState({
+      textContent: event.target.value
+    })
   },
 
   render() {
@@ -19,9 +33,9 @@ var MentionEditor = React.createClass({
     if (mention !== "") {
       showContent = (
         <div>
-          <p><b>Text:</b> {mention.data.text || ""}</p>
-          <p><b>Board:</b> {mention.data.board.name}</p>
-          <p><b>Card:</b> {mention.data.card.name}</p>
+          <p><b>Board:</b> {mention.data.board.name} || <b>Card:</b> {mention.data.card.name}</p>
+          <p><b>Comment/Event</b> {mention.data.text || mention.type}</p>
+          <p><b>Author:</b> {mention.memberCreator.fullName} ({mention.memberCreator.username})</p>
         </div>
       )
     }
@@ -29,7 +43,11 @@ var MentionEditor = React.createClass({
       <div>
         {showContent}
         <br />
-        <TextField fullWidth={true} hintText="Write something" onSubmit={this.props.submit} />
+        <TextField fullWidth={true}
+          hintText="Write something"
+          value={this.state.textContent}
+          onKeyDown={this.keyDown}
+          onChange={this.onChange} />
       </div>
     )
   }
@@ -47,10 +65,10 @@ const mapStateToProps = function (state, ownProps) {
   }
 }
 
-const mapDispatchToProps = function (dispatch) {
+const mapDispatchToProps = function (dispatch, ownProps) {
   return {
-    submit: (event) => {
-      console.log(event.target.value);
+    submit: (event, cardID) => {
+      dispatch(addComment(event.target.value, cardID))
     }
   }
 }

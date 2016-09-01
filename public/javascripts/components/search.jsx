@@ -1,24 +1,54 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
+import TextField from 'material-ui/TextField';
+
 var Search = React.createClass({
+  getInitialState() {
+    return {
+      textContent: ""
+    }
+  },
+
+  keyDown(event) {
+    if (event.keyCode === 13) {
+      this.props.submit(event);
+      this.setState({
+        textContent: ""
+      })
+    }
+  },
+
+  onChange(event) {
+    this.setState({
+      textContent: event.target.value
+    })
+  },
+
   render() {
     return (
       <div>
-        <h2>We be searching</h2>
+        <TextField
+          hintText="Search Cards"
+          onChange={this.onChange}
+          value={this.state.textContent}
+          onKeyDown={this.keyDown}
+          fullWidth={true}
+            />
       </div>
     )
   }
 })
+
 const mapStateToProps = function (state, ownProps) {
   return {
-    boards: state.boards
+
   }
 }
 
-const mapDispatchToProps = function (dispatch) {
+const mapDispatchToProps = function (dispatch, ownProps) {
   return {
-    
+
   }
 }
 

@@ -10,8 +10,6 @@ var trelloApp = function (state, action) {
       authorized: false,
       mentions: [],
       mentionsDownloaded: false,
-      boards: [],
-      boardsDownloaded: false,
       openTab: 'Mentions'
     }
   }

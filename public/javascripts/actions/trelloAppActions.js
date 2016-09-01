@@ -25,19 +25,21 @@ export const authorize = function() {
   }
 }
 
-export const getBoards = function () {
+export const addComment = function (commentText, cardID) {
   return (dispatch) => {
-    dispatch({type: "GETTING_ITEMS", type: "boards"})
+    dispatch({type: "ADD_COMMENT", value: commentText, cardID: cardID});
     new Promise(function(resolve, reject) {
-      Trello.get('/members/me/boards', function (data) {
-        resolve(data)
-      }, function (error) {
-        reject(error)
+      Trello.post(`/cards/${cardID}/actions/comments`, {
+        text: commentText
+      }, function (success) {
+        resolve(success)
+      }, function (fail) {
+        reject(fail)
       })
-    }).then(function (successDataObject) {
-      console.log(successDataObject);
+    }).then(function (success) {
+      console.log(success);
     }).catch(function (error) {
-      dispatch({type: "ITEM_RESPONSE", response: false, data: error})
+      console.log(error);
     })
   }
 }

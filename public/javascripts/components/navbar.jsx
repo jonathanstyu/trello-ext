@@ -4,7 +4,7 @@ import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FlatButton from 'material-ui/FlatButton';
 
-import {authorize, getItems, getBoards} from '../actions/trelloAppActions';
+import {authorize, getItems} from '../actions/trelloAppActions';
 import {connect} from 'react-redux';
 
 var NavBar = React.createClass({
@@ -41,11 +41,7 @@ const mapDispatchToProps = function (dispatch, ownProps) {
       dispatch(authorize())
     },
     get: (event) => {
-      if (ownProps.openTab === "Mentions") {
-        dispatch(getItems());
-      } else {
-        dispatch(getBoards());
-      }
+      dispatch(getItems());
     }
   }
 }

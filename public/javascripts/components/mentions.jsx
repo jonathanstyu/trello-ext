@@ -39,12 +39,7 @@ var Mentions = React.createClass({
             label="Cancel"
             primary={true}
             onTouchTap={this.handleClose}
-          />,
-      <FlatButton
-        label="Submit"
-        primary={true}
-        onTouchTap={this.handleClose}
-      />
+          />
     ]
 
     return (
