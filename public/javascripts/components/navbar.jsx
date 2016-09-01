@@ -1,48 +1,51 @@
 import React from 'react';
-import {authorize, getItems} from '../actions/trelloAppActions';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import FlatButton from 'material-ui/FlatButton';
+
+import {authorize, getItems, getBoards} from '../actions/trelloAppActions';
 import {connect} from 'react-redux';
 
 var NavBar = React.createClass({
-  render(){
+  handleTouchTap: function() {
+    if (this.props.authorized) {
+      this.props.get()
+    } else {
+      this.props.authorize()
+    }
+  },
+
+  render() {
     return (
-      <div>
-        <nav className='navbar navbar-default'>
-          <div className='container-fluid'>
-            <div className='navbar-header'>
-              <a href='#/' className='navbar-brand'>VideoViewer</a>
-            </div>
-            <div>
-              <button className={this.props.authorized ? "btn navbar-btn" : "btn navbar-btn"} onClick={this.props.authorize}>{this.props.authorized ? "Deauthorize" : "Authorize"}</button>
-              <button className='btn navbar-btn' onClick={this.props.getItems}>Get Items</button>
-              <form className='navbar-form navbar-right'>
-                <div>
-                  <input type='text' className='form-control' placeholder='Search'/>
-                </div>
-              </form>
-            </div>
-          </div>
-        </nav>
-        <div className='row'>
-          {this.props.children}
-        </div>
-      </div>
+      <AppBar
+        title={"Trello Extended"}
+        iconElementRight={
+          <FlatButton label={this.props.authorized ? "Get" : "Authorize"} onClick={this.handleTouchTap} />
+        }
+        />
     )
   }
 })
 
 const mapStateToProps = function (state, ownProps) {
   return {
-    authorized: state.authorized
+    authorized: state.authorized,
+    openTab: state.openTab
   }
 }
 
-const mapDispatchToProps = function (dispatch) {
+const mapDispatchToProps = function (dispatch, ownProps) {
   return {
     authorize: (event) => {
       dispatch(authorize())
     },
-    getItems: (event) => {
-      dispatch(getItems());
+    get: (event) => {
+      if (ownProps.openTab === "Mentions") {
+        dispatch(getItems());
+      } else {
+        dispatch(getBoards());
+      }
     }
   }
 }

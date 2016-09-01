@@ -5,9 +5,14 @@ import thunkMiddleware from 'redux-thunk';
 var trelloApp = function (state, action) {
   if (typeof state === 'undefined') {
     return {
+      snackOpen: false,
+      snackMessage: "",
       authorized: false,
       mentions: [],
-      downloaded: false
+      mentionsDownloaded: false,
+      boards: [],
+      boardsDownloaded: false,
+      openTab: 'Mentions'
     }
   }
   switch (action.type) {
@@ -15,17 +20,30 @@ var trelloApp = function (state, action) {
       break;
     case "AUTH_RESPONSE":
       return Object.assign({}, state, {
-        authorized: action.authorized
+        authorized: action.authorized,
+        snackMessage: "Trello Authorized",
+        snackOpen: true
       })
     case "ITEM_RESPONSE":
       if (action.response) {
         return Object.assign({}, state, {
-          downloaded: true,
-          mentions: action.data
+          mentionsDownloaded: true,
+          mentions: action.data,
+          snackMessage: "Data Received",
+          snackOpen: true
         })
       } else {
         return state;
       }
+
+    case "CLOSE_SNACKBAR":
+      return Object.assign({}, state, {
+        snackOpen: false
+      });
+    case "SWITCH_TABS":
+      return Object.assign({}, state, {
+        openTab: state.openTab === "Mentions" ? "Search" : "Mentions"
+      })
     default:
 
   }

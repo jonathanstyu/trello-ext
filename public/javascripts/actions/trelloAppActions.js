@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 export const authorize = function() {
   return (dispatch) => {
     var that = this;
@@ -23,19 +25,64 @@ export const authorize = function() {
   }
 }
 
+export const getBoards = function () {
+  return (dispatch) => {
+    dispatch({type: "GETTING_ITEMS", type: "boards"})
+    new Promise(function(resolve, reject) {
+      Trello.get('/members/me/boards', function (data) {
+        resolve(data)
+      }, function (error) {
+        reject(error)
+      })
+    }).then(function (successDataObject) {
+      console.log(successDataObject);
+    }).catch(function (error) {
+      dispatch({type: "ITEM_RESPONSE", response: false, data: error})
+    })
+  }
+}
+
 export const getItems = function () {
   return (dispatch) => {
-    dispatch({type: "GETTING_ITEMS"})
+    dispatch({type: "GETTING_ITEMS", type: "mentions"})
     new Promise(function(resolve, reject) {
       Trello.get('/members/me/notifications', function (data) {
         resolve(data)
       }, function (error) {
         reject(error)
       })
-    }).then(function (data) {
-      dispatch({type: "ITEM_RESPONSE", response: true, data: data})
+    }).then(function (successDataObject) {
+      checkItemsAgainstLocal(successDataObject, dispatch);
     }).catch(function (error) {
       dispatch({type: "ITEM_RESPONSE", response: false, data: error})
     })
   }
+}
+
+const checkItemsAgainstLocal = function (dataObject, dispatch) {
+  dispatch({type: "CHECKING_READ_STATUS"})
+  // Check what is read and unread
+  new Promise(function(resolve, reject) {
+    if (window.localStorage) {
+      dataObject.forEach(function (mention) {
+        if (window.localStorage.getItem(mention.id)) {
+          mention["readStatus"] = window.localStorage.getItem(mention.id, 'unread')
+        } else {
+          window.localStorage.setItem(mention.id, 'unread')
+          mention["readStatus"] = "unread"
+        }
+      })
+    } else {
+      dataObject.forEach(function (mention) {
+        mention["readStatus"] = "unread"
+        window.localStorage.setItem(mention.id, 'unread')
+      })
+
+    }
+    resolve(dataObject)
+  }).then(function (checkedObject) {
+    dispatch({type: "ITEM_RESPONSE", response: true, data: dataObject})
+  }).catch(function (error) {
+    dispatch({type: "CHECK_ERROR", response: error.message})
+  })
 }
