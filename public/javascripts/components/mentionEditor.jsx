@@ -1,7 +1,7 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
 
-import {addComment} from '../actions/trelloAppActions';
+import {addComment} from '../actions-reducers/trelloAppActions';
 import {connect} from 'react-redux';
 
 var MentionEditor = React.createClass({

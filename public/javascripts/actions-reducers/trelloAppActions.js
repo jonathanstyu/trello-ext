@@ -49,8 +49,7 @@ export const executeSearchQuery = function (query) {
     dispatch({type: "SEARCH_QUERY", value: query})
     new Promise(function(resolve, reject) {
       Trello.get(`/search/`, {
-        query: query,
-        card_fields: "all"
+        query: query
       }, function (data) {
         resolve(data)
       }, function (data) {

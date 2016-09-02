@@ -1,7 +1,14 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
+import SearchResults from './searchResults';
+
 import TextField from 'material-ui/TextField';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import Divider from 'material-ui/Divider';
+import Chip from 'material-ui/Chip';
+
+import {executeSearchQuery} from '../actions-reducers/trelloAppActions';
 
 var Search = React.createClass({
   getInitialState() {
@@ -13,42 +20,65 @@ var Search = React.createClass({
   keyDown(event) {
     if (event.keyCode === 13) {
       this.props.submit(event);
-      this.setState({
-        textContent: ""
-      })
+      event.target.value = ""
     }
   },
 
   onChange(event) {
-    this.setState({
-      textContent: event.target.value
-    })
+    event.stopPropagation();
   },
 
   render() {
     return (
       <div>
-        <TextField
-          hintText="Search Cards"
-          onChange={this.onChange}
-          value={this.state.textContent}
-          onKeyDown={this.keyDown}
+        <TextField onChange={this.onChange}
           fullWidth={true}
-            />
+          onKeyDown={this.keyDown}
+          hintText="Search for something here"
+          id="searchBar" />
+        <div style={styles.wrapper}>
+          <p>Previous Queries</p>
+          {
+            this.props.pastQueries.map(function (query) {
+              return (
+                <Chip style={styles.chip} key={query}>{query}</Chip>
+              )
+            })
+          }
+        </div>
+        <Divider />
+        <p>Results</p>
+        <SearchResults />
       </div>
     )
   }
 })
 
+const styles = {
+  chip: {
+    margin: 4
+  },
+  wrapper: {
+    display: "flex",
+    flexWrap: 'wrap'
+  }
+}
+
 const mapStateToProps = function (state, ownProps) {
   return {
-
+    pastQueries: state.queries.toArray()
   }
 }
 
 const mapDispatchToProps = function (dispatch, ownProps) {
   return {
-
+    submit: (event) => {
+      if (Trello.authorized()) {
+        dispatch(executeSearchQuery(event.target.value))
+      } else {
+        dispatch({type: "UNAUTHORIZED_SEARCH"})
+      }
+    }
   }
 }
 

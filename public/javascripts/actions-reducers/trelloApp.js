@@ -1,6 +1,5 @@
 import {createStore, applyMiddleware} from 'redux';
 import createLogger from 'redux-logger';
-import Immutable from 'immutable';
 import thunkMiddleware from 'redux-thunk';
 
 var trelloApp = function (state, action) {
@@ -11,9 +10,7 @@ var trelloApp = function (state, action) {
       authorized: false,
       mentions: [],
       mentionsDownloaded: false,
-      openTab: 'Mentions',
-      queries: Immutable.List(),
-      currentQueryResults: ""
+      openTab: 'Mentions'
     }
   }
   switch (action.type) {
@@ -45,22 +42,6 @@ var trelloApp = function (state, action) {
       return Object.assign({}, state, {
         openTab: state.openTab === "Mentions" ? "Search" : "Mentions"
       })
-    case "SEARCH_QUERY":
-      return Object.assign({}, state, {
-        queries: state.queries.push(action.value)
-      })
-
-    case "UNAUTHORIZED_SEARCH":
-      return Object.assign({}, state, {
-        snackMessage: "Please authorize before searching",
-        snackOpen: true
-      })
-    case 'QUERY_RESPONSE':
-      if (action.success) {
-        return Object.assign({}, state, {
-          currentQueryResults: action.data.cards
-        })
-      }
     default:
 
   }

@@ -4,7 +4,7 @@ import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FlatButton from 'material-ui/FlatButton';
 
-import {authorize, getItems} from '../actions/trelloAppActions';
+import {authorize, getItems} from '../actions-reducers/trelloAppActions';
 import {connect} from 'react-redux';
 
 var NavBar = React.createClass({

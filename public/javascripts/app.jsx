@@ -9,11 +9,23 @@ import Snackbar from 'material-ui/Snackbar';
 import {Tabs, Tab} from 'material-ui/Tabs';
 
 var App = React.createClass({
+  getInitialState() {
+    return {
+      value: "Mentions"
+    }
+  },
+
+  changeTabs() {
+    this.setState({
+      value: this.state.value === "Mentions" ? "Search" : "Mentions"
+    })
+  },
+
   render(){
     return (
       <div>
         <NavBar />
-        <Tabs value={this.props.openTab} onChange={this.props.switchTabs}>
+        <Tabs value={this.state.value} onChange={this.changeTabs}>
           <Tab label="Mentions" value="Mentions">
             <Mentions />
           </Tab>
