@@ -34,7 +34,7 @@ var Search = React.createClass({
         <TextField onChange={this.onChange}
           fullWidth={true}
           onKeyDown={this.keyDown}
-          hintText="Search for something here"
+          hintText={this.props.authorized ? "Search for something here" : "Authorize to do a search?"}
           id="searchBar" />
         <div style={styles.wrapper}>
           <p>Previous Queries</p>
@@ -66,7 +66,8 @@ const styles = {
 
 const mapStateToProps = function (state, ownProps) {
   return {
-    pastQueries: state.queries.toArray()
+    pastQueries: state.queries.toArray(),
+    authorized: state.authorized
   }
 }
 

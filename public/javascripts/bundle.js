@@ -44816,7 +44816,10 @@
 	        _react2.default.createElement(
 	          _Toolbar.ToolbarGroup,
 	          null,
-	          _react2.default.createElement(_FlatButton2.default, { label: 'GET MENTIONS', onClick: this.props.getItems, primary: true })
+	          _react2.default.createElement(_FlatButton2.default, {
+	            label: this.props.authorized ? "GET MENTIONS" : "AUTHORIZE FIRST", onClick: this.props.getItems,
+	            disabled: !this.props.authorized,
+	            primary: true })
 	        )
 	      ),
 	      _react2.default.createElement(
@@ -44907,7 +44910,8 @@
 
 	var mapStateToProps = function mapStateToProps(state, ownProps) {
 	  return {
-	    mentions: state.mentions
+	    mentions: state.mentions,
+	    authorized: state.authorized
 	  };
 	};
 
@@ -50799,7 +50803,7 @@
 	      _react2.default.createElement(_TextField2.default, { onChange: this.onChange,
 	        fullWidth: true,
 	        onKeyDown: this.keyDown,
-	        hintText: 'Search for something here',
+	        hintText: this.props.authorized ? "Search for something here" : "Authorize to do a search?",
 	        id: 'searchBar' }),
 	      _react2.default.createElement(
 	        'div',
@@ -50840,7 +50844,8 @@
 
 	var mapStateToProps = function mapStateToProps(state, ownProps) {
 	  return {
-	    pastQueries: state.queries.toArray()
+	    pastQueries: state.queries.toArray(),
+	    authorized: state.authorized
 	  };
 	};
 

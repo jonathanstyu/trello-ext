@@ -49,7 +49,10 @@ var Mentions = React.createClass({
         <Toolbar>
           <ToolbarTitle text="Options" />
           <ToolbarGroup>
-            <FlatButton label="GET MENTIONS" onClick={this.props.getItems} primary={true} />
+            <FlatButton
+              label={this.props.authorized ? "GET MENTIONS" : "AUTHORIZE FIRST"} onClick={this.props.getItems}
+              disabled={!this.props.authorized}
+              primary={true} />
           </ToolbarGroup>
         </Toolbar>
         <Table onCellClick={that.cellClick}>
@@ -93,7 +96,8 @@ var Mentions = React.createClass({
 
 const mapStateToProps = function (state, ownProps) {
   return {
-    mentions: state.mentions
+    mentions: state.mentions,
+    authorized: state.authorized
   }
 }
 
