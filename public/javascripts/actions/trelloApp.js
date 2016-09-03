@@ -13,7 +13,8 @@ var trelloApp = function (state, action) {
       mentionsDownloaded: false,
       openTab: 'Mentions',
       queries: Immutable.List(),
-      currentQueryResults: ""
+      currentQueryResults: "",
+      loading: false
     }
   }
   switch (action.type) {
@@ -47,7 +48,8 @@ var trelloApp = function (state, action) {
       })
     case "SEARCH_QUERY":
       return Object.assign({}, state, {
-        queries: state.queries.push(action.value)
+        queries: state.queries.push(action.value),
+        loading: true
       })
 
     case "UNAUTHORIZED_SEARCH":
@@ -58,7 +60,8 @@ var trelloApp = function (state, action) {
     case 'QUERY_RESPONSE':
       if (action.success) {
         return Object.assign({}, state, {
-          currentQueryResults: action.data.cards
+          currentQueryResults: action.data.cards,
+          loading: false
         })
       }
     default:

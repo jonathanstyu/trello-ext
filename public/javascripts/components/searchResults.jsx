@@ -19,13 +19,15 @@ var SearchResults = React.createClass({
       _.forEach(lists, function (cards, key) {
         listOfCards.push((
           <Card key={key}>
-            <CardHeader title={`List ${key}`} />
+            <CardHeader title={`List ${key}`} titleColor='blue' />
           </Card>
         ))
         listOfCards.push(cards.map(function (card) {
+          var date = new Date(card.dateLastActivity);
           return (
             <Card key={card.id}>
-              <CardHeader title="Card"/>
+              <CardHeader title="Card Search Result"
+                subtitle={`${date.getMonth()}/${date.getDate()}`}/>
               <CardText>{card.name}</CardText>
             </Card>
           )
@@ -34,7 +36,7 @@ var SearchResults = React.createClass({
       // We insert listOfCards into a prepared Board column Card stack
       var boardCol = (
         <Card key={key} style={styles.card}>
-          <CardHeader title={`Board: ${key}`} />
+          <CardHeader title={`Board: ${key}`} titleColor='red' />
           <Divider />
           {listOfCards}
         </Card>
@@ -45,7 +47,7 @@ var SearchResults = React.createClass({
     return(
       <div style={styles.tearsheet} >
         {
-          renderedColumns
+          this.props.loading ? <p>Loading ...</p> : renderedColumns
         }
       </div>
     )
@@ -71,9 +73,9 @@ const mapStateToProps = function (state, ownProps) {
   _.forEach(nestedCards, function (value, key) {
     nestedCards[key] = _.groupBy(value, 'idList')
   })
-  console.log(nestedCards);
   return {
-    results: nestedCards
+    results: nestedCards,
+    loading: state.loading
   }
 }
 

@@ -4,24 +4,16 @@ import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FlatButton from 'material-ui/FlatButton';
 
-import {authorize, getItems} from '../actions-reducers/trelloAppActions';
+import {authorize} from '../actions-reducers/trelloAppActions';
 import {connect} from 'react-redux';
 
 var NavBar = React.createClass({
-  handleTouchTap: function() {
-    if (this.props.authorized) {
-      this.props.get()
-    } else {
-      this.props.authorize()
-    }
-  },
-
   render() {
     return (
       <AppBar
         title={"Trello Extended"}
         iconElementRight={
-          <FlatButton label={this.props.authorized ? "Get" : "Authorize"} onClick={this.handleTouchTap} />
+          <FlatButton disabled={this.props.authorized} label={this.props.authorized ? "Authorized" : "Authorize"} onClick={this.props.authorize} />
         }
         />
     )
@@ -39,9 +31,6 @@ const mapDispatchToProps = function (dispatch, ownProps) {
   return {
     authorize: (event) => {
       dispatch(authorize())
-    },
-    get: (event) => {
-      dispatch(getItems());
     }
   }
 }

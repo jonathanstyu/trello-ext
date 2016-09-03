@@ -4,9 +4,11 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
-import Paper from 'material-ui/Paper'
+import Paper from 'material-ui/Paper';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 
-import MentionEditor from './mentionEditor'
+import MentionEditor from './mentionEditor';
+import {getItems} from '../actions-reducers/trelloAppActions';
 
 var Mentions = React.createClass({
   getInitialState: function () {
@@ -44,6 +46,12 @@ var Mentions = React.createClass({
 
     return (
       <div>
+        <Toolbar>
+          <ToolbarTitle text="Options" />
+          <ToolbarGroup>
+            <FlatButton label="GET MENTIONS" onClick={this.props.getItems} primary={true} />
+          </ToolbarGroup>
+        </Toolbar>
         <Table onCellClick={that.cellClick}>
           <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
             <TableRow>
